@@ -46,19 +46,19 @@ void shop_keeper_items_calc()
         }
     }
 
-    if(sg_current_map != MAP_SHOP && ap_memory.pc.items[AP_ITEM_BROOCH] == 1 && sg_item_flags.brooch == 0x4)
+    if(sg_current_map != MAP_SHOP && ap_memory.real_items[AP_ITEM_BROOCH] == 1 && sg_item_flags.brooch == 0x4)
     {
         sg_item_flags.brooch = 0x03;
     }
-    if(sg_current_map != MAP_SHOP && ap_memory.pc.items[AP_ITEM_JEWELRY_BOX] == 1 && sg_item_flags.jewelry_box == 0x4)
+    if(sg_current_map != MAP_SHOP && ap_memory.real_items[AP_ITEM_JEWELRY_BOX] == 1 && sg_item_flags.jewelry_box == 0x4)
     {
         sg_item_flags.jewelry_box = 0x03;
     }
-    if(sg_current_map != MAP_SHOP && ap_memory.pc.items[AP_ITEM_FRUIT] == 1 && sg_item_flags.fruit == 0x4)
+    if(sg_current_map != MAP_SHOP && ap_memory.real_items[AP_ITEM_FRUIT] == 1 && sg_item_flags.fruit == 0x4)
     {
         sg_item_flags.fruit = 0x03;
     }
-    if(sg_current_map != MAP_SHOP && ap_memory.pc.items[AP_ITEM_GAUNTLET] == 1 && sg_item_flags.gauntlet == 0x4)
+    if(sg_current_map != MAP_SHOP && ap_memory.real_items[AP_ITEM_GAUNTLET] == 1 && sg_item_flags.gauntlet == 0x4)
     {
         sg_item_flags.gauntlet = 0x03;
     }

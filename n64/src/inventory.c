@@ -386,7 +386,7 @@ bool item_equipped(u8 item)
 
 u8 check_ingame_check(u8 item, u8 amt)
 {
-  if(ap_memory_ptrs.n64_saves_fake[item] == amt){
+  if(ap_memory.n64_saves_fake[item] == amt){
     return true;
   }
   return false;

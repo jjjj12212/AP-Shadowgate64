@@ -36,10 +36,10 @@ void show_dialog(u8 item)
     sg_game_state = GS_DIALOG;
     DIALOG_SET = true;
     sg_dialog_question = 0;
-    character_translate(ap_memory.pc.message);
+    character_translate(ap_memory.message);
     sg_dialog_icon = item;
     sg_dialog_show_icon = true;
-    ap_memory_ptrs.text_ready = false;
+    ap_memory.text_ready = false;
 }
 
 void show_dialog_text(char *text)
@@ -47,10 +47,10 @@ void show_dialog_text(char *text)
     sg_game_state = GS_DIALOG;
     DIALOG_SET = true;
     sg_dialog_question = 0;
-    strcpy(ap_memory.pc.message, text);
-    character_translate(ap_memory.pc.message);
+    strcpy(ap_memory.message, text);
+    character_translate(ap_memory.message);
     sg_dialog_show_icon = false;
-    ap_memory_ptrs.text_ready = false;
+    ap_memory.text_ready = false;
 }
 
 

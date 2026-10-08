@@ -6,16 +6,7 @@
 #include "sg/item_flags.h"
 
 extern ap_memory_t ap_memory;
-
-
-typedef struct {
-  u8 n64_saves_fake[AP_NOTE_MAX];
-  u8 n64_queue;
-  u8 text_ready;
-} ap_memory_ptr_t;
-extern ap_memory_ptr_t ap_memory_ptrs;
-extern ap_memory_ptr_t* AP_MEMORY_PTR;
-
+extern ap_memory_t* AP_MEMORY_PTR;
 
 enum UTIL_INJECT {
   UTIL_INJECT_RAW,

@@ -1,7 +1,6 @@
 #include "util.h"
 
 ap_memory_t ap_memory = {0, };
-ap_memory_ptr_t ap_memory_ptrs = {0, };
 
 void util_inject(enum UTIL_INJECT type, u32 addr, u32 data, u8 addNOP) {
   u32 op = 0;

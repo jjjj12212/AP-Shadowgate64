@@ -12,6 +12,7 @@ bool moat_drained = false;
 bool ctimer = false;
 bool candle_requirement_flagged = false;
 bool agaar_complete = false;
+u8 text_timer = false;
 
 bool dpad_upressed = false;
 bool dpad_rpressed = false;
@@ -30,26 +31,26 @@ void obtain_ingame_check(u8 _knownu8, u32 _unkown_addr, u8 item)
 {
   if(item == AP_ITEM_WATER) // Real check is from function obtain_ingame_npc_check
   {
-    ap_memory_ptrs.n64_saves_fake[item-1] = 1;
+    ap_memory.n64_saves_fake[item-1] = 1;
   }
   else
   {
-    ap_memory_ptrs.n64_saves_fake[item] = 1;
+    ap_memory.n64_saves_fake[item] = 1;
   }
 }
 
 extern void obtain_ingame_npc_check_displaced(u8 _knownu8, u8 _knownu82, u8 item);
 void obtain_ingame_npc_check(u8 _knownu8, u8 _knownu82, u8 item)
 {
-  ap_memory_ptrs.n64_saves_fake[item] = 1;
+  ap_memory.n64_saves_fake[item] = 1;
 }
 
 void show_ap_text()
 {
-  if(ap_memory_ptrs.n64_queue < ap_memory.pc.text_queue && ap_memory_ptrs.text_ready == true)
+  if(ap_memory.n64_queue < ap_memory.text_queue && ap_memory.text_ready == true)
   {
-    show_dialog(ap_memory.pc.message_item);
-    ap_memory_ptrs.n64_queue++;
+    show_dialog(ap_memory.message_item);
+    ap_memory.n64_queue++;
   }
 }
 
@@ -93,7 +94,7 @@ void inject_loop(u32* _unkownptr1, u32* _unkownptr2, u8 rand)
 
 void open_main_door()
 {
-  if(ap_memory.pc.setting_open_door == true)
+  if(ap_memory.setting_open_door == true)
   {
     if(sg_current_map == MAP_TOWER1_ENTRANCE && have_item(AP_ITEM_RING_OF_THE_DEAD) == false)
     {
@@ -128,7 +129,7 @@ void complete_slippers()
     obtain_ingame_check(0, 0, AP_ITEM_PAIR_OF_SLIPPERS);
     obtain_item(AP_ITEM_PAIR_OF_SLIPPERS);
   }
-  else if(ap_memory.pc.items[AP_ITEM_PAIR_OF_SLIPPERS] == false)
+  else if(ap_memory.real_items[AP_ITEM_PAIR_OF_SLIPPERS] == false)
   {
     sg_item_flags.pair_of_slippers = 0x0;
   }
@@ -173,7 +174,7 @@ void remove_inventory_items()
   {
     sg_item_flags.chipped_violin = 0x04;
   }
-  if(ap_memory_ptrs.n64_saves_fake[AP_ITEM_STONE_OF_THIRST] == 1)
+  if(ap_memory.n64_saves_fake[AP_ITEM_STONE_OF_THIRST] == 1)
   {
     sg_item_flags.pair_of_slippers = 0x04;
   }
@@ -331,7 +332,28 @@ bool pre_loop()
   if(DIALOG_SET == true && sg_game_state == GS_NORMAL)
   {
     DIALOG_SET = false;
-    ap_memory_ptrs.text_ready = true;
+    if(text_timer == 0)
+    {
+      ap_memory.text_ready = true;
+    }
+    else {
+      text_timer--;
+    }
+  }
+  if(sg_player_locked == 0x01 || sg_game_state != GS_NORMAL)
+  {
+    ap_memory.text_ready = false;
+    text_timer = 20;
+  }
+  else if(DIALOG_SET == false && sg_player_locked == 0x00 && sg_game_state == GS_NORMAL)
+  {
+    if(text_timer == 0)
+    {
+      ap_memory.text_ready = true;
+    }
+    else {
+      text_timer--;
+    }
   }
   if(sg_scene_handler == SH_NORMAL && sg_player_locked != 0x01)
   {
@@ -410,12 +432,13 @@ void dialog_override_check(u32* text_ptr)
     sg_fn_dialog_text(text_ptr);
   } else
   {
-    sg_fn_dialog_text((u32*)ap_memory.pc.message);
+    sg_fn_dialog_text((u32*)ap_memory.message);
   }
 }
 
 
 u32 inject_hooks() {
+  AP_MEMORY_PTR = &ap_memory;
   util_inject(UTIL_INJECT_FUNCTION, 0x80098A24, (u32)pre_loop, 0);
   util_inject(UTIL_INJECT_FUNCTION, 0x800900E0, (u32)inject_loop, 0);
   util_inject(UTIL_INJECT_FUNCTION, 0x800320E8, (u32)obtain_ingame_check, 1);
@@ -427,8 +450,12 @@ u32 inject_hooks() {
       util_inject(UTIL_INJECT_RAW, addr, 0, 0);
   }
   util_inject(UTIL_INJECT_FUNCTION, 0x8002FD64, (u32)dialog_override_check, 0);
-  ap_memory_ptrs.text_ready = true;
-  ap_memory.pc.setting_open_door = false;
+  ap_memory.text_ready = true;
+  ap_memory.setting_open_door = false;
+  ap_memory.major = 1;
+  ap_memory.minor = 0;
+  ap_memory.patch = 1;
+  ap_memory.hook = 0x12212122;
   return 0;
 }
 

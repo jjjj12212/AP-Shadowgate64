@@ -1,13 +1,9 @@
 #ifndef ARCHIPELAGO_H
 #define ARCHIPELAGO_H
 
-#define AP_VERSION_MAJOR 4
-#define AP_VERSION_MINOR 0
-#define AP_VERSION_PATCH 0
-
 #include <stdint.h>
 #include <stdbool.h>
-#include "ap_memory/pc.h"
+#include "ap_memory/items.h"
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -33,17 +29,18 @@ typedef float f32;
 typedef double f64;
 
 typedef struct {
-  ap_memory_pc_t pc; // only the pc program should write data here
+    u32 hook;
+    u8 major;
+    u8 minor;
+    u8 patch;
+    u8 n64_saves_fake[AP_NOTE_MAX];
+    u8 real_items[AP_NOTE_MAX];
+    u8 message[256];
+    u8 message_item;
+    u8 text_queue;
+    u8 n64_queue;
+    u8 text_ready;
+    u8 setting_open_door;
 } ap_memory_t;
-
-typedef union {
-  struct {
-    u16 major;
-    u8  minor;
-    u8  patch;
-  };
-  u32 as_int;
-} ap_version_t;
-static const ap_version_t AP_VERSION = {AP_VERSION_MAJOR, AP_VERSION_MINOR, AP_VERSION_PATCH};
 
 #endif // ARCHIPELAGO_H
